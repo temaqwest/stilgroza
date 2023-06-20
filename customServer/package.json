@@ -1,0 +1,26 @@
+{
+  "name": "customhttp",
+  "version": "1.0.0",
+  "description": "Custom HTTP server with routing and other stuff (Just for fun)",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "node",
+    "http",
+    "server",
+    "routing",
+    "database"
+  ],
+  "author": "teqst",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "pg": "^8.11.0"
+  }
+}
