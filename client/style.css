@@ -1,0 +1,63 @@
+#app {
+    width: 100%;
+    height: 100%;
+    background-color: #282a34;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100vh;
+}
+
+.logo, .tools {
+    position: absolute;
+    top: 0;
+    right: 50px;
+    background-color: aliceblue;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    padding: 10px 20px;
+    border-radius: 0 0 10px 10px;
+    z-index: 9;
+    gap: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo .logo__title {
+    font-family: Arial, sans-serif;
+    font-size: 25px;
+    user-select: none;
+}
+
+.logo .logo__img {
+    width: 40px;
+}
+
+.logo .orange {
+    color: #F37947;
+}
+
+
+.tools {
+    top: 100px;
+    right: 0;
+    border-radius: 10px 0 0 10px;
+    flex-flow: column nowrap;
+    gap: 20px;
+    padding: 20px 10px;
+}
+
+.tools .tools__btn {
+    transition: all .2s ease;
+}
+
+.tools .tools__btn img {
+    width: 25px;
+    height: 25px;
+}
+
+.tools .tools__btn:hover {
+    transform: scale(1.2);
+}
