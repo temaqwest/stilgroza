@@ -65,7 +65,7 @@ async function getLightnings() {
 }
 
 const createMarker = (lon, lat) => {
-	return new VectorLayer({
+	const marker = new VectorLayer({
 		source: new VectorSource({
 			features: [
 				new Feature({
@@ -77,69 +77,19 @@ const createMarker = (lon, lat) => {
 		}),
 		style: new Style({
 			image: new Icon({
-				width: 60,
-				anchor: [0.5, 1],
+				width: 75,
 				src: 'assets/lightning.png'
 			})
 		})
 	})
+	
+	return marker
 }
 
 getLightnings().then((res) => {
 	res.forEach((data) => {
-		map.addLayer(createMarker(data.longitude, data.latitude))
+		const marker = createMarker(data.longitude, data.latitude)
+		
+		map.addLayer(marker)
 	})
 })
-//
-// const startMarker = new Feature({
-// 	type: 'icon',
-// 	geometry: new Point(route.getFirstCoordinate()),
-// });
-// const endMarker = new Feature({
-// 	type: 'icon',
-// 	geometry: new Point(route.getLastCoordinate()),
-// });
-// const position = startMarker.getGeometry().clone();
-// const geoMarker = new Feature({
-// 	type: 'geoMarker',
-// 	geometry: position,
-// });
-//
-// const styles = {
-// 	'route': new Style({
-// 		stroke: new Stroke({
-// 			width: 6,
-// 			color: [237, 212, 0, 0.8],
-// 		}),
-// 	}),
-// 	'icon': new Style({
-// 		image: new Icon({
-// 			anchor: [0.5, 1],
-// 			src: 'data/icon.png',
-// 		}),
-// 	}),
-// 	'geoMarker': new Style({
-// 		image: new CircleStyle({
-// 			radius: 7,
-// 			fill: new Fill({color: 'black'}),
-// 			stroke: new Stroke({
-// 				color: 'white',
-// 				width: 2,
-// 			}),
-// 		}),
-// 	}),
-// };
-//
-// const vectorLayer = new VectorLayer({
-// 	source: new VectorSource({
-// 		features: [routeFeature, geoMarker, startMarker, endMarker],
-// 	}),
-// 	style: function (feature) {
-// 		return styles[feature.get('type')];
-// 	},
-// });
-//
-// map.addLayer(vectorLayer);
-//
-// let distance = 0;
-// let lastTime;
