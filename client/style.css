@@ -61,3 +61,118 @@
 .tools .tools__btn:hover {
     transform: scale(1.2);
 }
+
+.notification {
+    position: absolute;
+    padding: 20px 30px;
+    border-radius: 10px;
+    top: 70px;
+    left: 10%;
+    z-index: 9;
+    transition: all .2s ease;
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet, red);
+    background-size: 400% 400%;
+    animation: shitty-anima .5s alternate infinite, gradient 1s linear infinite;
+    backface-visibility: visible;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* @keyframes duration | easing-function | delay |
+iteration-count | direction | fill-mode | play-state | name */
+/*animation: 3s ease-in 1s 2 reverse both paused slidein;*/
+
+.notification.notification--visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.notification::after, .notification::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -10px;
+    width: 60px;
+    height: 60px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("assets/cat.png");
+}
+
+.notification::before {
+    top: initial;
+    bottom: -110px;
+    left: 10px;
+    width: 160px;
+    height: 160px;
+    background-image: url("assets/lights.png");
+}
+
+.notification h3 {
+    z-index: 9;
+    font-size: 20px;
+    color: yellowgreen;
+    font-weight: 900;
+    text-shadow: 0px 2px 0 crimson;
+    text-decoration: underline;
+
+}
+
+@keyframes shitty-anima {
+    0% {
+        transform: scaleY(1) scaleX(1);
+    }
+    100% {
+        transform: scaleY(1.2) scaleX(1.2);
+    }
+}
+
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes flip {
+    0% {
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out;
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(0) rotateY(-1turn);
+        transform: perspective(400px) scaleX(1) translateZ(0) rotateY(-1turn)
+    }
+
+    40% {
+        -webkit-animation-timing-function: ease-out;
+        animation-timing-function: ease-out;
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-190deg);
+        transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-190deg)
+    }
+
+    50% {
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-170deg);
+        transform: perspective(400px) scaleX(1) translateZ(150px) rotateY(-170deg)
+    }
+
+    80% {
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        -webkit-transform: perspective(400px) scale3d(.95,.95,.95) translateZ(0) rotateY(0deg);
+        transform: perspective(400px) scale3d(.95,.95,.95) translateZ(0) rotateY(0deg)
+    }
+
+    to {
+        -webkit-animation-timing-function: ease-in;
+        animation-timing-function: ease-in;
+        -webkit-transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0deg);
+        transform: perspective(400px) scaleX(1) translateZ(0) rotateY(0deg)
+    }
+}

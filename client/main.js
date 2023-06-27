@@ -9,6 +9,9 @@ import XYZ from 'ol/source/XYZ.js';
 import {Icon, Style,} from 'ol/style.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {fromLonLat} from "ol/proj.js";
+import notification from './notification'
+import {defaults as defaultControls} from 'ol/control.js';
+import ZoomSlider from 'ol/control/ZoomSlider.js';
 
 document.querySelector('#app').innerHTML = `
 	<div class="logo">
@@ -20,10 +23,11 @@ document.querySelector('#app').innerHTML = `
 	<div class="tools">
 		<button class="tools__btn"><img src="assets/zoom-in.png" alt="zoom-in" id="zoom-in" class="tools__zoomin"></button>
 		<button class="tools__btn"><img src="assets/zoom-out.png" alt="zoom-out" id="zoom-out" class="tools__zoomout"></button>
+		<button class="tools__btn"><img src="assets/extent.png" alt="extentAll" id="extent-all" class="tools__extent"></button>
 	</div>
     <div id="map" class="map"></div>
 `
-
+const markers = []
 const center = [-5639523.95, -3501274.52];
 const map = new Map({
 	target: document.getElementById('map'),
@@ -33,6 +37,7 @@ const map = new Map({
 		minZoom: 2,
 		maxZoom: 19,
 	}),
+	controls: defaultControls().extend([new ZoomSlider()]),
 	layers: [
 		new TileLayer({
 			source: new XYZ({
@@ -55,6 +60,10 @@ document.getElementById('zoom-in').onclick = function () {
 	view.setZoom(zoom + 1);
 };
 
+document.getElementById('extent-all').onclick = function () {
+	extentAll(markers)
+};
+
 
 async function getLightnings() {
 	const res = await fetch('http://localhost:5050/lightnings', {
@@ -64,8 +73,32 @@ async function getLightnings() {
 	return res.json()
 }
 
+function extentAll(markers = []) {
+	let fPair = []
+	let sPair = []
+	
+	markers.forEach((marker) => {
+		const [x1, y1, x2, y2] = marker.getSource().getExtent()
+		fPair.push(x1, x2)
+		sPair.push(y1, y2)
+	})
+	
+	const allSources = [
+		Math.min(...fPair),
+		Math.min(...sPair),
+		Math.max(...fPair),
+		Math.max(...sPair)
+	]
+	
+	map.getView().fit(allSources,  {
+		size: map.getSize(),
+		padding: [50, 50, 50, 50],
+		duration: 3100
+	});
+}
+
 const createMarker = (lon, lat) => {
-	const marker = new VectorLayer({
+	return new VectorLayer({
 		source: new VectorSource({
 			features: [
 				new Feature({
@@ -82,14 +115,14 @@ const createMarker = (lon, lat) => {
 			})
 		})
 	})
-	
-	return marker
 }
 
 getLightnings().then((res) => {
 	res.forEach((data) => {
 		const marker = createMarker(data.longitude, data.latitude)
-		
 		map.addLayer(marker)
+		markers.push(marker)
 	})
 })
+
+notification()
