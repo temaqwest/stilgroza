@@ -1,4 +1,8 @@
 import './style.css'
+
+import notification from './notification'
+import {start, stop, eventSource} from "./sse.js";
+
 import './node_modules/ol/ol.css'
 import Feature from 'ol/Feature.js';
 import Map from 'ol/Map.js';
@@ -9,7 +13,6 @@ import XYZ from 'ol/source/XYZ.js';
 import {Icon, Style,} from 'ol/style.js';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 import {fromLonLat} from "ol/proj.js";
-import notification from './notification'
 import {defaults as defaultControls} from 'ol/control.js';
 import ZoomSlider from 'ol/control/ZoomSlider.js';
 
@@ -117,12 +120,14 @@ const createMarker = (lon, lat) => {
 	})
 }
 
-getLightnings().then((res) => {
-	res.forEach((data) => {
+start((res) => {
+	const data = JSON.parse(res.data)
+	
+	notification()
+	data.forEach((data) => {
+		console.log(data)
 		const marker = createMarker(data.longitude, data.latitude)
 		map.addLayer(marker)
 		markers.push(marker)
 	})
 })
-
-notification()
