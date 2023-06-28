@@ -1,7 +1,7 @@
 import './style.css'
 
 import notification from './notification'
-import {start, stop, eventSource} from "./sse.js";
+import {start} from "./sse.js";
 
 import './node_modules/ol/ol.css'
 import Feature from 'ol/Feature.js';
@@ -67,15 +67,6 @@ document.getElementById('extent-all').onclick = function () {
 	extentAll(markers)
 };
 
-
-async function getLightnings() {
-	const res = await fetch('http://localhost:5050/lightnings', {
-		method: 'GET'
-	})
-	
-	return res.json()
-}
-
 function extentAll(markers = []) {
 	let fPair = []
 	let sPair = []
@@ -125,7 +116,6 @@ start((res) => {
 	
 	notification()
 	data.forEach((data) => {
-		console.log(data)
 		const marker = createMarker(data.longitude, data.latitude)
 		map.addLayer(marker)
 		markers.push(marker)

@@ -5,7 +5,7 @@ export function start(callback) {
 	eventSource = new EventSource('http://localhost:5050/sse-lightnings');
 	
 	eventSource.onopen = function(e) {
-		console.log("Событие: open");
+		console.log("Открытие");
 	};
 	
 	eventSource.onerror = function(e) {

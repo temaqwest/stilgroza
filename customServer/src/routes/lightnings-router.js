@@ -4,12 +4,18 @@ const amqp = require('amqplib/callback_api')
 
 const router = new Router();
 
+/**
+ * Get all lightnings
+ */
 router.get('/lightnings', async (req, res) => {
     const allLightnings = await db('SELECT * FROM lightnings')
     console.log(allLightnings)
     res.send(allLightnings);
 })
 
+/**
+ * Create new lightning event
+ */
 router.post('/lightnings', async (req, res) => {
     let result = ''
 
@@ -25,6 +31,9 @@ router.post('/lightnings', async (req, res) => {
     res.send(result);
 })
 
+/**
+ * Get lightning by ID
+ */
 router.get('/lightning', async (req, res) => {
     if (!req?.body?.id) return res.send('Lightning not found');
     
@@ -32,6 +41,9 @@ router.get('/lightning', async (req, res) => {
     res.send(lightning[0]);
 })
 
+/**
+ * Get 5 last lightnings (Server - sent events)
+ */
 router.get('/sse-lightnings', async (req, res) => {
     res.writeHead(200, {
         Connection: 'keep-alive',
@@ -40,9 +52,7 @@ router.get('/sse-lightnings', async (req, res) => {
     })
     
     let i = 1
-    
-    
-    amqp.connect('amqp://test:password@192.168.201.25:5672', (err0, connection) => {
+    amqp.connect(`amqp://${process.env.AMQP_USER}:${process.env.AMQP_PASSWORD}@${process.env.AMQP_HOST}:${process.env.AMQP_PORT}`, (err0, connection) => {
         if (err0) throw err0
         connection.createChannel((err1, channel) => {
             if (err1) throw err1
@@ -51,22 +61,17 @@ router.get('/sse-lightnings', async (req, res) => {
                 durable: false
             })
             channel.purgeQueue(mainQueue)
-            
+
             channel.consume(mainQueue, async (msg) => {
-                const content = await msg.content
-                console.log(content.toString('utf-8'))
-                
+                const content = await msg?.content
+                console.log(content)
+
                 let data = await db('SELECT * from lightnings order by id desc limit 5;')
-                res.write(`event: message\nid: ${i}\nretry: 5000\ndata: ${JSON.stringify(data)}\n\n`)
-    
+                await res.write(`event: message\nid: ${i}\nretry: 5000\ndata: ${JSON.stringify(data)}\n\n`)
                 i++
             })
         })
     })
-    
-    // res.send();
 })
 
 module.exports = router;
-
-// 192.165.65.82
