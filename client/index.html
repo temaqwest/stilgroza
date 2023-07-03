@@ -5,13 +5,33 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/destyle.css@4.0.0/destyle.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>IPR-TATEVOSYAN-CLIENT</title>
   </head>
   <body>
     <div class="notification" id="notification">
       <h3>Где-то произошел удар молнии...</h3>
     </div>
-    <div id="app"></div>
+    <div id="app">
+      <div class="logo">
+        <img src="assets/lightning.png" alt="logo" class="logo__img">
+        <span class="logo__title">
+			<strong>Stil</strong><span class="orange">Groza</span>
+		</span>
+      </div>
+      <div class="tools">
+        <button class="tools__btn"><img src="assets/zoom-in.png" alt="zoom-in" id="zoom-in" class="tools__zoomin"></button>
+        <button class="tools__btn"><img src="assets/zoom-out.png" alt="zoom-out" id="zoom-out" class="tools__zoomout"></button>
+        <button class="tools__btn"><img src="assets/extent.png" alt="extentAll" id="extent-all" class="tools__extent"></button>
+      </div>
+      <div id="map" class="map"></div>
+      <div class="lightnings-list" id="lightnings-list">
+        <h3 class="lightnings-list__title">Последние события сессии</h3>
+        <ul class="lightnings-list__list">
+
+        </ul>
+      </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/elm-pep@1.0.6/dist/elm-pep.js"></script>
     <script type="module" src="/main.js"></script>
   </body>

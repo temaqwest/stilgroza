@@ -1,6 +1,6 @@
 const notification = document.querySelector('#notification')
 
-export default function () {
+export function toggleNotification() {
 	notification.classList.add('notification--visible')
 	
 	setTimeout(() => {

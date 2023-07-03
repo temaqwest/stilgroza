@@ -5,12 +5,18 @@
     position: relative;
 }
 
+#app > * {
+    font-family: Arial, sans-serif;
+}
+
 #map {
     width: 100%;
     height: 100vh;
 }
 
-.logo, .tools {
+.logo,
+.tools,
+.lightnings-list {
     position: absolute;
     top: 0;
     right: 50px;
@@ -62,6 +68,60 @@
     transform: scale(1.2);
 }
 
+.lightnings-list {
+    top: 300px;
+    right: 0;
+    width: 350px;
+    max-height: 400px;
+    overflow: hidden;
+    border-radius: 10px 0 0 10px;
+    flex-flow: column nowrap;
+    gap: 20px;
+    padding: 20px 10px;
+    transition: all .2s ease-in-out;
+    transform: translateX(305px);
+    cursor: help;
+}
+
+.lightnings-list * {
+    color: aliceblue;
+    transition: color .2s ease-in-out;
+}
+
+.lightnings-list:hover {
+    transform: translateX(0);
+}
+
+.lightnings-list:hover * {
+    color: #282a34;
+}
+
+.lightnings-list:hover li {
+    color: mediumslateblue;
+}
+.lightnings-list:hover strong {
+    color: darkmagenta;
+}
+
+.lightnings-list .lightnings-list__title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.lightnings-list .lightnings-list__list {
+    overflow: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 5px;
+    padding-left: 30px;
+    list-style-type: decimal;
+}
+
+.lightnings-list__list .lightnings-list__list-item {
+    list-style-type: decimal;
+}
+
+
 .notification {
     position: absolute;
     padding: 20px 30px;
@@ -77,10 +137,6 @@
     opacity: 0;
     visibility: hidden;
 }
-
-/* @keyframes duration | easing-function | delay |
-iteration-count | direction | fill-mode | play-state | name */
-/*animation: 3s ease-in 1s 2 reverse both paused slidein;*/
 
 .notification.notification--visible {
     opacity: 1;
