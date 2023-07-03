@@ -7,7 +7,9 @@ export async function getPlaceFromCoords(lon, lat) {
 	)
 	
 	const json = await response.json()
-	const formatted = json.results[0].formatted
+	const formatted = json?.results[0]?.formatted
+	
+	if (!formatted) return 'unknown'
 	
 	return formatted
 }

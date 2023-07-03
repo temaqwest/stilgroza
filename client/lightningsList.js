@@ -6,6 +6,7 @@ export async function updateLightningsList(events = []) {
 	const list = listContainer.querySelector('.lightnings-list__list')
 	
 	for (const event of events) {
+		console.log(event)
 		list.appendChild(await createListItem(event))
 	}
 }

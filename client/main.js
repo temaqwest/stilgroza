@@ -133,11 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
 		updateLightningsList(data)
 		
 		data.forEach((data) => {
-			// MARK - REVERSED lon lat
-			const marker = createMarker(data.latitude, data.longitude)
+			const marker = createMarker(data.longitude, data.latitude)
 			map.addLayer(marker)
 			markers.push(marker)
 		})
+		
+		extentAll(markers)
 	}
 	
 })
