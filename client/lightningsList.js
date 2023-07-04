@@ -16,6 +16,6 @@ async function createListItem(event) {
 	
 	li.classList.add('lightnings-list__list-item')
 	li.innerHTML = `
-		 <strong>${await getPlaceFromCoords(event.longitude, event.latitude)}</strong> - ${new Date(event.time).toDateString()}`
+		 <strong>${await getPlaceFromCoords(event.latitude, event.longitude)}</strong> - ${new Date(event.time).toDateString()}`
 	return li
 }

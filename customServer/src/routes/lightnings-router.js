@@ -3,6 +3,9 @@ const db = require('../database/index')
 const amqp = require('amqplib/callback_api')
 
 const router = new Router();
+let clients = [];
+let facts = [];
+
 
 /**
  * Get all lightnings
@@ -44,38 +47,65 @@ router.get('/lightning', async (req, res) => {
 /**
  * Get 5 last lightnings (Server - sent events)
  */
-router.get('/sse-lightnings', async (req, res) => {
-    console.log('SSE GOES')
+router.get('/sse-lightnings', sseHandler)
+
+async function sseHandler(req, res) {
+    console.log('SSE CONNECTED')
+
     res.writeHead(200, {
-        Connection: 'keep-alive',
         'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
         'Cache-Control': 'no-cache'
     })
 
-
     let i = 1
-    
-    console.log(`amqp://${process.env.AMQP_USER}:${process.env.AMQP_PASSWORD}@${process.env.AMQP_HOST}:${process.env.AMQP_PORT}`)
+    const example = {
+        id: 507,
+        latitude: -37.926868,
+        longitude: -63.632813,
+        time: '2023-07-04T11:39:43.045Z'
+    };
+
+    res.write(`event: message\nid: ${i}\nretry: 1000\ndata: ${JSON.stringify([example])}\n\n`)
+
     amqp.connect(`amqp://${process.env.AMQP_USER}:${process.env.AMQP_PASSWORD}@${process.env.AMQP_HOST}:${process.env.AMQP_PORT}`, (err0, connection) => {
         if (err0) throw err0
+
         connection.createChannel((err1, channel) => {
             if (err1) throw err1
+
             const mainQueue = 'main'
+
             channel.assertQueue(mainQueue, {
                 durable: false
             })
-            channel.purgeQueue(mainQueue)
 
             channel.consume(mainQueue, async (msg) => {
                 const content = await msg?.content
-                console.log('RBMQ')
+                console.log('GOT EVENT FROM RBMQ')
                 console.log(content.toString('utf-8'))
-                let data = await db('SELECT * from lightnings order by id desc limit 5;')
-                await res.write(`event: message\nid: ${i}\nretry: 5000\ndata: ${JSON.stringify(data)}\n\n`)
+                let data = await db('SELECT * FROM lightnings WHERE ID > (SELECT COUNT(*) FROM lightnings) - 5;')
+                await res.write(`event: message\nid: ${i}\nretry: 1000\ndata: ${JSON.stringify(data)}\n\n`)
+                console.log('DATABASE:', data)
+                console.log('data was sent to user by sse')
                 i++
-            })
+            }, {noAck: true})
         })
     })
-})
+
+    const clientId = Date.now();
+
+    const newClient = {
+        id: clientId,
+        res
+    };
+
+    clients.push(newClient);
+
+    req.on('close', () => {
+        console.log(`${clientId} Connection closed`);
+        clients = clients.filter(client => client.id !== clientId);
+    });
+}
 
 module.exports = router;

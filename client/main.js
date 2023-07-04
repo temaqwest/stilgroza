@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	 * OpenLayers setup
 	 * @type {*[]}
 	 */
-	const markers = []
+	let markers = []
 	const center = [-5639523.95, -3501274.52];
 	const map = new Map({
 		target: document.getElementById('map'),
@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		markers.forEach(layer => {
 			map.removeLayer(layer);
 		});
+		markers = []
 	}
 	
 	
@@ -126,9 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	};
 	
 	eventSourceInstance.onmessage = function(res) {
-		const data = JSON.parse(res.data)
-		
 		clearAllMarkers()
+		console.log({markers: markers, response: JSON.parse(res.data)})
+
+		const data = JSON.parse(res.data)
 		toggleNotification()
 		updateLightningsList(data)
 		
